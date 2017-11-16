@@ -44,21 +44,43 @@
 					<p class="pull-right">PRICE: Php <%= item.price%></p>
 					<p><%= item.created.toDateString() %> to <%= item.endDate.toDateString() %></p>
 					<p>DESCRIPTION modal: <%= item.description %></p>
+					<p>
+						<em>Posted by: <%= item.author.name %></em>
+					</p>
+					<% if(currentUser && item.author.id.equals(currentUser._id)) { %>
+					<a class="btn btn-warning btn-xs" href="/items/<%= item._id %>/edit">Edit</a>
+					<form class="delete-form" action="/items/<%= item._id%>?_method=DELETE" method="POST">
+						<button class="btn btn-xs btn-danger">Delete</button>
+					</form>
+					<% } %>
 				</div>
 			</div>
 			<div class="well">
-				<div class="text-right">
-					<a class="btn btn-success" href="/items/<%= item._id %>/comments/new">Add New Comment</a>
+				<form action="/items/<%= item._id %>" method="POST">
+				<div><input class="form-control" type="text" placeholder="comment" name="comment[text]">
 				</div>
+				<div class="text-right">
+					<button class="btn btn-success">SUBMIT</button>
+				</div>
+			</form>
 				<hr>
 				<% item.comments.forEach(function(comment){ %>
 				<div class="row">
 					<div class="col-md-12">
-						<strong><%= comment.author %></strong>
+						<strong><%= comment.author.name %> <%= comment.author.lname %></strong>
 						<span class="pull-right">10 days ago</span>
 						<p>
 							<%= comment.text %>
 						</p>
+						<% if(currentUser && comment.author.id.equals(currentUser._id)) { %>
+						<a href="/items/<%= item._id%>/comments/<%=comment._id%>/edit" 
+						   class="btn btn-xs btn-warning">
+						Edit
+					</a>
+					<form class="delete-form" action="/items/<%= item._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
+						<input type="submit" class="btn btn-xs btn-danger" value="Delete">
+					</form>
+					<% } %>
 					</div>
 				</div>
 				<% }); %>

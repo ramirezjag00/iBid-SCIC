@@ -8,6 +8,14 @@ var itemSchema = new mongoose.Schema({
 	description: String,
 	created:{type:Date, default: Date.now},
 	endDate:Date,
+	author: {
+		id:{
+			type:mongoose.Schema.Types.ObjectId,
+			ref:"User"
+		},
+		username:Number,
+		name:String
+	},
 	comments:[
 	{
 		type: mongoose.Schema.Types.ObjectId,

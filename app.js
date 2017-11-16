@@ -18,11 +18,12 @@ var itemRoutes = require("./routes/items");
 var indexRoutes = require("./routes/index");
 
 //APP CONFIG
-mongoose.connect("mongodb://localhost/ibid_v2", {useMongoClient: true});
+mongoose.connect("mongodb://localhost/ibid_v3", {useMongoClient: true});
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 //seedDB(); //seed the database
+app.use(methodOverride("_method"));
 
 
 //PASSPORT CONFIG
@@ -46,7 +47,7 @@ app.use(function(req,res,next){
 //ROUTES APP CONFIG
 app.use("/", indexRoutes);
 app.use("/items", itemRoutes);
-app.use("/items/:id/comments", commentRoutes);
+app.use("/items/:id", commentRoutes);
 
 //SERVER
 app.listen(process.env.PORT, process.env.IP, function(){

@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Item = require("../models/item");
+var middleware = require("../middleware");
 
 //INDEX ROUTE
 router.get("/", function(req,res){
@@ -15,13 +16,18 @@ router.get("/", function(req,res){
 });
 
 //CREATE ROUTE
-router.post("/", function(req,res){
+router.post("/", middleware.isLoggedIn, function(req,res){
 	var name = req.body.name;
 	var price = req.body.price;
 	var endDate = req.body.endDate;
 	var image = req.body.image;
 	var desc = req.body.description;
-	var newItem = {name: name, image: image, price:price, endDate:endDate, description:desc};
+	var author = {
+		id: req.user._id,
+		username: req.user.username,
+		name: req.user.name
+	}
+	var newItem = {name: name, price:price, endDate: endDate, image: image, description:desc, author:author}
 	//create a new item and save to DB
 	Item.create(newItem, function(err, newlyCreated){
 		if(err){
@@ -34,7 +40,7 @@ router.post("/", function(req,res){
 });
 
 // NEW ROUTE
-router.get("/new", function(req,res){
+router.get("/new", middleware.isLoggedIn, function(req,res){
 	res.render("items/new");
 });
 
@@ -51,5 +57,40 @@ router.get("/:id", function(req,res){
 		}
 	})
 });
+
+//EDIT ROUTE
+
+router.get("/:id/edit", middleware.checkItemOwnership, function(req,res){
+	Item.findById(req.params.id, function(err, foundItem){
+		res.render("items/edit", {item: foundItem});	
+	});
+});
+
+//UPDATE ROUTE
+
+router.put("/:id", middleware.checkItemOwnership, function(req,res){
+	//find and update the correct item
+	Item.findByIdAndUpdate(req.params.id, req.body.item, function(err, updatedItem){
+		if(err){
+			res.redirect("/items");
+		} else {
+			//redirect somewhere(show page)
+			res.redirect("/items/" + req.params.id);
+		}
+	})
+	
+});
+
+//DESTROY ROUTE
+router.delete("/:id", middleware.checkItemOwnership, function(req,res){
+	Item.findByIdAndRemove(req.params.id, function(err){
+		if(err){
+			res.redirect("/items");
+		} else {
+			res.redirect("/items");
+		}
+	});
+});
+
 
 module.exports = router;
