@@ -1,0 +1,51 @@
+<% include ../partials/header %>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="text-center btn btn-danger btn-block active">TIME REMAINING</div>
+		</div>
+	</div>
+</div>
+<hr>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-3">
+			<p class="lead"><%= item.name %></p>
+			<div class="list-group">
+				<li class="list-group-item">Item #</li>
+				<li class="list-group-item">Current Bid</li>
+				<li class="list-group-item">Current Owner</li>
+				<button class="btn btn-warning btn-block btn-lg">BID</button>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<div class="thumbnail">
+				<img class="img-responsive" src="<%= item.image %>">
+				<div class="caption-full">
+					<h4 class="pull-right">PRICE</h4>
+					<h4>Post Date to End Date</h4>
+					<p>DESCRIPTION modal: <%= item.description %></p>
+				</div>
+			</div>
+			<div class="well">
+				<div class="text-right">
+					<a class="btn btn-success" href="/items/<%= item._id %>/comments/new">Add New Comment</a>
+				</div>
+				<hr>
+				<% item.comments.forEach(function(comment){ %>
+				<div class="row">
+					<div class="col-md-12">
+						<strong><%= comment.author %></strong>
+						<span class="pull-right">10 days ago</span>
+						<p>
+							<%= comment.text %>
+						</p>
+					</div>
+				</div>
+				<% }); %>
+			</div>
+		</div>
+	</div>
+</div>
+<% include ../partials/footer %>

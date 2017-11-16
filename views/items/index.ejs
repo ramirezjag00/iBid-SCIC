@@ -1,0 +1,44 @@
+<% include ../partials/header %>
+
+<div class="container">
+	<header class="jumbotron">
+		<div class="container">
+			<h1>Welcome to iBid!</h1>
+			<p>View our hand-picked items available for bidding.</p>
+			<p><a class="btn btn-lg btn-danger active" data-toggle="collapse" href="#disclaimerCollapse">DISCLAIMER</a></p>
+			<p>
+			<div id="disclaimerCollapse" class="collapse">
+		        <ol class="list-group">
+		          <li class="list-group-item">Only SCIC employees may use the service(s) offered by this website.</li>
+		          <li class="list-group-item">You must be logged in to press the bid button.</li>
+		          <li class="list-group-item">Pressing the "bid" button will increase the item's current price by 50 php.</li>
+		          <li class="list-group-item">There is a confirmation after pressing bid.</li>
+		          <li class="list-group-item">There is a 60 minute window to cancel your bid.</li>
+		          <li class="list-group-item">Items for sale may be inspected upon request. Items also go through a check before being posted on this website.</li>
+		          <li class="list-group-item">When an item ends, and the owner of the winning bid fails to pay for the item within 48 hours (we must be notified if you will be unable to claim the item during the 48 hour span or in advanced) or cancellation will cost PHP 250.00 and 5% of the item's current price.</li>
+		        </ol>
+     		</div>
+				<a class="btn btn-lg btn-primary" href="/items/new">Add New Item</a>
+			</p>
+		</div>
+	</header>
+
+	<div class="row text-center divFlexWrap">
+			<% items.forEach(function(item){%>
+		<div class="col-md-3 col-sm-6">
+			<a href="/items/<%= item._id %>"><div class="thumbnail">
+				<img class="img-responsive" src="<%= item.image %>" />
+				<div class="caption">
+				<h4><%= item.name %></h4></a>
+			</div>
+			<!--<p>
+				<a href="/items/<%= item._id %>" class="btn btn-primary">More Info</a>
+			</p>-->
+			
+			</div>
+		</div>
+	<% }); %>
+	</div>
+</div>
+	<% include ../partials/footer %>
+	
