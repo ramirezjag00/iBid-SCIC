@@ -3,8 +3,11 @@ var mongoose = require("mongoose");
 
 var itemSchema = new mongoose.Schema({
 	name:String,
+	price: String,
 	image:String,
 	description: String,
+	created:{type:Date, default: Date.now},
+	endDate:Date,
 	comments:[
 	{
 		type: mongoose.Schema.Types.ObjectId,

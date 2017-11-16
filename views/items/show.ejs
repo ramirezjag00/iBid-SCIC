@@ -2,7 +2,25 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<div class="text-center btn btn-danger btn-block active">TIME REMAINING</div>
+			<div class="text-center btn btn-danger btn-block active">TIME REMAINING: <span id="demo"></span></div>
+			<script type="text/javascript">
+	          var countDownDate = new Date("<%= item.endDate%>").getTime();
+	          var countdownfunction = setInterval(function() {
+	          var now = new Date().getTime();
+	          var distance = countDownDate - now;
+	          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+	          var hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
+	          var minutes = Math.floor(distance % (1000 * 60 * 60) / (1000 * 60));
+	          var seconds = Math.floor(distance % (1000 * 60) / 1000);
+	          document.getElementById("demo").innerHTML =
+	              days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+	          
+	            if (distance < 0) {
+	              clearInterval(countdownfunction);
+	              document.getElementById("demo").innerHTML = "EXPIRED";
+	            }
+	          }, 1000);
+        	</script>
 		</div>
 	</div>
 </div>
@@ -13,9 +31,9 @@
 		<div class="col-md-3">
 			<p class="lead"><%= item.name %></p>
 			<div class="list-group">
-				<li class="list-group-item">Item #</li>
-				<li class="list-group-item">Current Bid</li>
-				<li class="list-group-item">Current Owner</li>
+				<li class="list-group-item">Item Number: <%= item._id%></li>
+				<li class="list-group-item">Current Bid: <%= item.price%></li>
+				<li class="list-group-item">Highest Bidder:</li>
 				<button class="btn btn-warning btn-block btn-lg">BID</button>
 			</div>
 		</div>
@@ -23,8 +41,8 @@
 			<div class="thumbnail">
 				<img class="img-responsive" src="<%= item.image %>">
 				<div class="caption-full">
-					<h4 class="pull-right">PRICE</h4>
-					<h4>Post Date to End Date</h4>
+					<p class="pull-right">PRICE: Php <%= item.price%></p>
+					<p><%= item.created.toDateString() %> to <%= item.endDate.toDateString() %></p>
 					<p>DESCRIPTION modal: <%= item.description %></p>
 				</div>
 			</div>
