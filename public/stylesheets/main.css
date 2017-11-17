@@ -26,11 +26,20 @@ img:hover {
 .thumbnail img {
   width: 100%;
 }
+
 .thumbnail {
   padding: 0;
 }
 .thumbnail .caption-full {
   padding: 9px;
+}
+
+.delete-form {
+  display: inline;
+}
+
+.indexItem {
+  height: 200px !important;
 }
 
 .bgFooter {
@@ -42,4 +51,16 @@ img:hover {
 #disclaimerCollapse li {
   background: #eeeeee;
   border: none;
+}
+
+#submit {
+   display: none;
+}
+
+#cancel {
+   display: none;
+}
+
+#edit {
+  display: none;
 }

@@ -11,6 +11,19 @@
 	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+	<script>
+$(document).ready(function(){
+    $("#show").click(function(){
+        $("#edit, #submit, #cancel").show();
+         $("#editContent, #show, #del").hide();
+    });
+    $("#cancel").click(function(){
+    $("#edit, #submit, #cancel").hide();
+    $("#editContent, #show, #del").show();
+    });
+});
+</script>
+
 	<nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -19,7 +32,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                     
       </button>
-			<a class="navbar-brand" href="/items">iBid <span class="labelMini">Powered by: SCIC - MIS</span></a>
+			<a class="navbar-brand" href="/">iBid <span class="labelMini">Powered by: SCIC - MIS</span></a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav navbar-right">
@@ -27,7 +40,7 @@
 				<li><a href="/login">Log In</a></li>
 				<li><a href="/register">Sign Up</a></li>
 				<% } else { %>
-				<li><a href="#">Logged-In as: <%= currentUser.username %></a></li>
+				<li><a href="#"><%= currentUser.name %> <%= currentUser.lname %></a></li>
 				<li><a href="#">MyBids</a></li>
 				<li><a href="/logout">Log Out</a></li>
 				<% } %>
