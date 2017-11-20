@@ -88,17 +88,26 @@ router.get("/:id/edit", middleware.checkItemOwnership, function(req,res){
 
 //UPDATE bid ROUTE
 
+// router.put("/:id", middleware.isLoggedIn, function(req,res){
+// 	//find one and update the correct item
+// 	Item.update({_id: req.user._id}, {$inc: {bidPrice:50}}, function(err, updatedItem){
+// 		if(err){
+// 			res.redirect("/items");
+// 		} else {
+// 			//redirect somewhere(show page)
+// 			res.redirect("/items/" + req.params.id);
+// 		}
+// 	});
+// });
+
 router.put("/:id", middleware.isLoggedIn, function(req,res){
-	//find one and update the correct item
-	Item.update({_id: req.user._id}, {$inc: {bidPrice:50}}, function(err, updatedItem){
+	Item.findByIdAndUpdate(req.params.id, {$inc:{ 'bidPrice': 50}}, function(err, updatedItem){
 		if(err){
-			res.redirect("/items");
+			console.log(err);
 		} else {
-			//redirect somewhere(show page)
 			res.redirect("/items/" + req.params.id);
 		}
 	});
-	
 });
 
 //UPDATE ROUTE
@@ -113,7 +122,6 @@ router.put("/:id", middleware.checkItemOwnership, function(req,res){
 			res.redirect("/items/" + req.params.id);
 		}
 	})
-	
 });
 
 //DESTROY ROUTE
