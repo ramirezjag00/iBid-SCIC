@@ -27,13 +27,10 @@
 			<% items.forEach(function(item){%>
 		<div class="col-md-3 col-sm-6">
 			<a href="/items/<%= item._id %>"><div class="thumbnail">
-				<img class="img-responsive" src="<%= item.image %>" />
+				<img class="img-responsive indexItem" src="<%= item.image %>" />
 				<div class="caption">
 				<h4><%= item.name %></h4></a>
 			</div>
-			<!--<p>
-				<a href="/items/<%= item._id %>" class="btn btn-primary">More Info</a>
-			</p>-->
 			
 			</div>
 		</div>
