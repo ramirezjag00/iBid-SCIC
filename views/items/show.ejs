@@ -1,51 +1,132 @@
 <% include ../partials/header %>
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="text-center btn btn-danger btn-block active">TIME REMAINING</div>
-		</div>
-	</div>
-</div>
-<hr>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="text-center btn btn-danger btn-block active">TIME REMAINING: <span id="demo"></span></div>
+        <script type="text/javascript">
+          var countDownDate = new Date("<%= item.endDate%>").getTime();
+          var countdownfunction = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById("demo").innerHTML =
+              days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+          
+            if (distance < 0) {
+              clearInterval(countdownfunction);
+              document.getElementById("demo").innerHTML = "EXPIRED";
+            }
+          }, 1000);
+        </script>
+      </div>
+    </div>
+  </div>
+  <hr>
 
-<div class="container">
-	<div class="row">
-		<div class="col-md-3">
-			<p class="lead"><%= item.name %></p>
-			<div class="list-group">
-				<li class="list-group-item">Item #</li>
-				<li class="list-group-item">Current Bid</li>
-				<li class="list-group-item">Current Owner</li>
-				<button class="btn btn-warning btn-block btn-lg">BID</button>
-			</div>
-		</div>
-		<div class="col-md-9">
-			<div class="thumbnail">
-				<img class="img-responsive" src="<%= item.image %>">
-				<div class="caption-full">
-					<h4 class="pull-right">PRICE</h4>
-					<h4>Post Date to End Date</h4>
-					<p>DESCRIPTION modal: <%= item.description %></p>
-				</div>
-			</div>
-			<div class="well">
-				<div class="text-right">
-					<a class="btn btn-success" href="/items/<%= item._id %>/comments/new">Add New Comment</a>
-				</div>
-				<hr>
-				<% item.comments.forEach(function(comment){ %>
-				<div class="row">
-					<div class="col-md-12">
-						<strong><%= comment.author %></strong>
-						<span class="pull-right">10 days ago</span>
-						<p>
-							<%= comment.text %>
-						</p>
-					</div>
-				</div>
-				<% }); %>
-			</div>
-		</div>
-	</div>
-</div>
-<% include ../partials/footer %>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <p class="lead">
+          <%= item.name %>
+        </p>
+        <div class="list-group">
+          <li class="list-group-item">Item Number:
+            <%= item._id%>
+          </li>
+          <form action="/items/<%= item._id %>?_method=PUT" method="POST"> 
+          <li class="list-group-item">Current Bid: <!-- <span id="pricePlus50"> --><%= item.bidPrice %><!-- </span> --> </li>      	  
+          <li class="list-group-item">Highest Bidder: <%= item.highestBidder.username %> </li>
+          <% if(currentUser && !currentUser._id.equals(item.highestBidder.id)) { %>
+          <button class="btn btn-warning btn-block btn-lg" type="submit" onclick="return confirmBid()">BID</button>
+         <% } %>
+        </form>
+        <!-- name="bidName" onclick="return confirmBid()" -->
+          <script>
+    function confirmBid()
+    {
+      var x = confirm("Are you sure you want to Bid?");
+      if (x){
+          return true;
+      }
+      else {
+        return false;
+    }
+}
+</script>
+<!--  <script>
+$('#bid50').click(function() {
+  var num = parseInt($('#pricePlus50').text());
+  $('#pricePlus50').text(num+50);
+});
+</script> -->
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="thumbnail">
+          <img class="img-responsive" src="<%= item.image %>">
+          <div class="caption-full">
+            <p class="pull-right">PRICE: Php
+              <%= item.price%>
+            </p>
+            <p>
+              <%= item.created.toDateString() %> to
+                <%= item.endDate.toDateString() %>
+            </p>
+            <p>DESCRIPTION modal:
+              <%= item.description %>
+            </p>
+            <p>
+              <em>Posted by: <%= item.author.name %></em>
+            </p>
+            <% if(currentUser && item.author.id.equals(currentUser._id)) { %>
+              <a class="btn btn-warning btn-xs" href="/items/<%= item._id %>/edit">Edit</a>
+              <form class="delete-form" action="/items/<%= item._id%>?_method=DELETE" method="POST">
+                <button class="btn btn-xs btn-danger">Delete</button>
+              </form>
+              <% } %>
+          </div>
+        </div>
+        <div class="well">
+          <form action="/items/<%= item._id %>" method="POST">
+            <div><input class="form-control" type="text" placeholder="comment" name="comment[text]">
+            </div>
+            <div class="text-right">
+              <button class="btn btn-success">SUBMIT</button>
+            </div>
+          </form>
+          <hr>
+          <% item.comments.forEach(function(comment){ %>
+            <div class="row">
+              <div class="col-md-12">
+                <strong><%= comment.author.name %> <%= comment.author.lname %></strong>
+                <span class="pull-right"><%= comment.created.toDateString()%></span>
+                <p id="editContent">
+                  <%= comment.text %>
+                </p>
+                
+
+
+                <% if(currentUser && comment.author.id.equals(currentUser._id)) { %>
+
+                <form action="/items/<%= item._id %>?_method=PUT" method="POST">
+                  <input type="text" id="edit" class="form-control" value="<%=comment.text%>" name="comment.text" hidden>
+                  <button id="submit" type="submit" class="btn btn-xs btn-success">Submit</button>
+                  <button id="cancel" type="reset" class="btn btn-xs">Cancel</button>
+                </form>
+
+                  <button class="btn btn-xs btn-warning" id="show">Edit</button>
+                  <form class="delete-form" action="/items/<%= item._id%>?_method=DELETE" method="POST">
+                    <input type="submit" class="btn btn-xs btn-danger" value="Delete" id="del">
+                  </form>
+                  <% } %>
+              </div>
+            </div>
+            <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../partials/footer %>
