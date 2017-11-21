@@ -20,7 +20,7 @@ var indexRoutes = require("./routes/index");
 var bidRoutes = require("./routes/bids")
 
 //APP CONFIG
-mongoose.connect("mongodb://localhost/ibid_v4fixed", {useMongoClient: true});
+mongoose.connect("mongodb://localhost/bidtest", {useMongoClient: true});
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -57,4 +57,4 @@ app.listen(process.env.PORT, process.env.IP, function(){
 	console.log("iBid SERVER STARTED");
 });
 
-app.listen(27017);
+app.listen(3999);

@@ -20,11 +20,7 @@ router.post("/", middleware.isLoggedIn, function(req,res){
 	var name = req.body.name;
 	var price = req.body.price;
 	var bidPrice = req.body.bidPrice;
-	var highestBidder = {
-		id: req.user._id,
-		username: req.user.username,
-		name: req.user.name
-	};
+	var highestBidder = "";
 	var endDate = req.body.endDate;
 	var image = req.body.image;
 	var desc = req.body.description;
@@ -33,7 +29,7 @@ router.post("/", middleware.isLoggedIn, function(req,res){
 		username: req.user.username,
 		name: req.user.name
 	}
-	var newItem = {name: name, price:price, bidPrice:bidPrice, highestBidder:highestBidder, image: image, description:desc, author:author}
+	var newItem = {name: name, price:price, bidPrice:bidPrice, higestBidder : highestBidder, image: image, description:desc, author:author}
 	//create a new item and save to DB
 	Item.create(newItem, function(err, newlyCreated){
 		if(err){
@@ -71,8 +67,6 @@ router.get("/:id", function(req,res){
 		if(err){
 			console.log(err);
 		} else {
-			// console.log(foundItem);
-			//render show template with that item
 			res.render("items/show", {item: foundItem});
 		}
 	})
@@ -102,16 +96,11 @@ router.get("/:id/edit", middleware.checkItemOwnership, function(req,res){
 
 //update bidPrice/highestBidder Route
 router.put("/:id", middleware.isLoggedIn, function(req,res){
-	Item.findByIdAndUpdate(req.params.id, {$inc:{ 'bidPrice': 50}}, {$set: {'highestBidder.id' : req.user.id}}, function(err, updatedItem){
-		if(err){
+	Item.findByIdAndUpdate(req.params.id, {$set:{highestBidder: req.user.id}},{$inc:{ bidPrice: 50}},
+		function(err, updatedItem){
+			if(err){
 			console.log(err);
 		} else {
-			// console.log("c user id " + req.user.id);
-			// console.log("p id " + req.params.id);
-			// console.log("highest bidder id "+
-updatedItem.highestBidder.id = req.user.id;
-updatedItem.save();
-			// highestBidder.push(req.user.id);
 			res.redirect("/items/" + req.params.id);
 		}
 	});

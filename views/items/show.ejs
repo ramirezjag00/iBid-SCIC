@@ -38,8 +38,8 @@
           </li>
           <form action="/items/<%= item._id %>?_method=PUT" method="POST"> 
           <li class="list-group-item">Current Bid: <!-- <span id="pricePlus50"> --><%= item.bidPrice %><!-- </span> --> </li>      	  
-          <li class="list-group-item">Highest Bidder: <%= item.highestBidder.username %> </li>
-          <% if(currentUser && !currentUser._id.equals(item.highestBidder.id)) { %>
+          <li class="list-group-item">Highest Bidder: <%= item.highestBidder %> </li>
+          <% if(currentUser && !currentUser._id.equals(item.highestBidder)) { %>
           <button class="btn btn-warning btn-block btn-lg" type="submit" onclick="return confirmBid()">BID</button>
          <% } %>
         </form>
