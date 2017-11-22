@@ -19,7 +19,7 @@ img:hover {
 }
 
 .divFormWidthMargin {
-  width: 30%;
+  width: 35%;
   margin: 25px auto;
 }
 
@@ -39,7 +39,7 @@ img:hover {
 }
 
 .indexItem {
-  height: 200px !important;
+  height: 15% !important;
 }
 
 .bgFooter {
@@ -63,4 +63,40 @@ img:hover {
 
 #edit {
   display: none;
+}
+
+textarea {
+   resize: none;
+}
+
+pre {
+  font: 1em Montserrat, sans-serif;
+  overflow:hidden; 
+  background-color:white; 
+  border:none;
+}
+
+@media only screen and (max-width: 600px) {
+    .divFormWidthMargin {
+  width: 47%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .divFormWidthMargin {
+  width: 60%;
+  }
+}
+
+.navbar-inverse{
+  background-color: #303030;
+}
+
+::selection {
+  background-color: #7dba03;
+}
+
+.col-md-3 a, .col-sm-6 a {
+  text-decoration: none;
+  color: #000000;
 }

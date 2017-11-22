@@ -1,5 +1,5 @@
 <% include ../partials/header %>
-  <div class="container-fluid">
+  <div class="container">
     <div class="row">
       <div class="col-md-12">
         <div class="text-center btn btn-danger btn-block active">TIME REMAINING: <span id="demo"></span></div>
@@ -37,17 +37,20 @@
             <%= item._id%>
           </li>
           <form action="/items/<%= item._id %>?_method=PUT" method="POST"> 
-          <li class="list-group-item">Current Bid: <!-- <span id="pricePlus50"> --><%= item.bidPrice %><!-- </span> --> </li>      	  
+          <li class="list-group-item">Current Bid: <%= item.bidPrice %> </li>      	  
           <li class="list-group-item">Highest Bidder: <%= item.highestBidder %> </li>
-          <% if(currentUser && !currentUser._id.equals(item.highestBidder)) { %>
-          <button class="btn btn-warning btn-block btn-lg" type="submit" onclick="return confirmBid()">BID</button>
+          <% if(currentUser && (!currentUser._id.equals(item.highestBidder) && !currentUser._id.equals(item.author.id))) { %>
+
+            <% if (Date.now() < item.endDate) { %>
+          <button class="btn btn-success btn-block btn-lg" type="submit" onclick="return confirmBid()">BID</button>
+            <% } %>
          <% } %>
         </form>
-        <!-- name="bidName" onclick="return confirmBid()" -->
+        
           <script>
     function confirmBid()
     {
-      var x = confirm("Are you sure you want to Bid?");
+      var x = confirm("Are you sure?");
       if (x){
           return true;
       }
@@ -56,12 +59,6 @@
     }
 }
 </script>
-<!--  <script>
-$('#bid50').click(function() {
-  var num = parseInt($('#pricePlus50').text());
-  $('#pricePlus50').text(num+50);
-});
-</script> -->
         </div>
       </div>
       <div class="col-md-9">
@@ -75,56 +72,17 @@ $('#bid50').click(function() {
               <%= item.created.toDateString() %> to
                 <%= item.endDate.toDateString() %>
             </p>
-            <p>DESCRIPTION modal:
-              <%= item.description %>
-            </p>
+            <pre>Item Description:<br /><%= item.description %>
+            </pre>
             <p>
               <em>Posted by: <%= item.author.name %></em>
             </p>
-            <% if(currentUser && item.author.id.equals(currentUser._id)) { %>
-              <a class="btn btn-warning btn-xs" href="/items/<%= item._id %>/edit">Edit</a>
-              <form class="delete-form" action="/items/<%= item._id%>?_method=DELETE" method="POST">
-                <button class="btn btn-xs btn-danger">Delete</button>
-              </form>
-              <% } %>
-          </div>
-        </div>
-        <div class="well">
-          <form action="/items/<%= item._id %>" method="POST">
-            <div><input class="form-control" type="text" placeholder="comment" name="comment[text]">
-            </div>
-            <div class="text-right">
-              <button class="btn btn-success">SUBMIT</button>
-            </div>
+            <% if(currentUser && currentUser._id.equals(item.author.id)) { %>
+            <form class="delete-form" action="/items/<%= item._id%>?_method=DELETE" method="POST">
+            <button class="btn btn-xs btn-danger" onclick="return confirmBid()">Delete</button>
           </form>
-          <hr>
-          <% item.comments.forEach(function(comment){ %>
-            <div class="row">
-              <div class="col-md-12">
-                <strong><%= comment.author.name %> <%= comment.author.lname %></strong>
-                <span class="pull-right"><%= comment.created.toDateString()%></span>
-                <p id="editContent">
-                  <%= comment.text %>
-                </p>
-                
-
-
-                <% if(currentUser && comment.author.id.equals(currentUser._id)) { %>
-
-                <form action="/items/<%= item._id %>?_method=PUT" method="POST">
-                  <input type="text" id="edit" class="form-control" value="<%=comment.text%>" name="comment.text" hidden>
-                  <button id="submit" type="submit" class="btn btn-xs btn-success">Submit</button>
-                  <button id="cancel" type="reset" class="btn btn-xs">Cancel</button>
-                </form>
-
-                  <button class="btn btn-xs btn-warning" id="show">Edit</button>
-                  <form class="delete-form" action="/items/<%= item._id%>?_method=DELETE" method="POST">
-                    <input type="submit" class="btn btn-xs btn-danger" value="Delete" id="del">
-                  </form>
-                  <% } %>
-              </div>
-            </div>
-            <% }); %>
+          <% } %>
+          </div>
         </div>
       </div>
     </div>

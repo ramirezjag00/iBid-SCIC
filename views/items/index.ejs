@@ -18,23 +18,48 @@
 		          <li class="list-group-item">When an item ends, and the owner of the winning bid fails to pay for the item within 48 hours (we must be notified if you will be unable to claim the item during the 48 hour span or in advanced) or cancellation will cost PHP 250.00 and 5% of the item's current price.</li>
 		        </ol>
      		</div>
-				<a class="btn btn-lg btn-primary" href="/items/new">Add New Item</a>
+     		
+     		<% if(currentUser && (currentUser.name === "Admin")) { %>
+				<a class="btn btn-lg btn-success" href="/items/new">Add New Item</a>
+			<% } %>
 			</p>
 		</div>
 	</header>
 
 	<div class="row text-center divFlexWrap">
+		
 			<% items.forEach(function(item){%>
 		<div class="col-md-3 col-sm-6">
 			<a href="/items/<%= item._id %>"><div class="thumbnail">
 				<img class="img-responsive indexItem" src="<%= item.image %>" />
 				<div class="caption">
 				<h4><%= item.name %></h4></a>
+				   <div class="text-center btn btn-danger btn-block active">TIME REMAINING: <span class="demo"></span></div>
+        <script type="text/javascript">
+          var countDownDate = new Date("<%= item.endDate%>").getTime();
+          var countdownfunction = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementsByClassName("demo").innerHTML =
+              days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+          
+            if (distance < 0) {
+              clearInterval(countdownfunction);
+              document.getElementsByClassName("demo").innerHTML = "EXPIRED";
+            }
+          }, 1000);
+        </script>
 			</div>
 			
 			</div>
 		</div>
+		
 	<% }); %>
+	
 	</div>
 </div>
 	<% include ../partials/footer %>

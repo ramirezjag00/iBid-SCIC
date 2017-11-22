@@ -6,7 +6,7 @@ var User = require("../models/user");
 
 //ROOT ROUTE
 router.get("/", function(req,res){
-	res.render("landing");
+	res.redirect("/items");
 });
 
 //register form route
@@ -19,10 +19,11 @@ router.post("/register", function(req,res){
 	var newUser = new User({name:req.body.name, lname:req.body.lname, username:req.body.username});
 	User.register(newUser, req.body.password, function(err,user){
 		if(err){
-			console.log(err);
+			req.flash("error", err.message);
 			return res.render("register");
 		}
 		passport.authenticate("local")(req,res,function(){
+			req.flash("success", "Welcome to iBid "+user.username);
 			res.redirect("/items");
 		});
 	});
@@ -37,14 +38,17 @@ router.get("/login", function(req,res){
 router.post("/login",passport.authenticate("local", 
 	{
 	successRedirect:"/items", 
-	failureRedirect: "/login"
-	}), function(req,res){
+	failureRedirect: "/login",
+	failureFlash: true
+	}), function(req, res){
 });
+	
 
 //log out route
 router.get("/logout", function(req,res){
 	req.logout();
-	res.redirect("/items");
+	req.flash("success", "Successfully logged out!");
+	res.redirect("/login");
 });
 
 module.exports = router;
