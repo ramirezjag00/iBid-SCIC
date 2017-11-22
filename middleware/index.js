@@ -22,8 +22,6 @@ middlewareObj.checkItemOwnership = function(req,res,next) {
 	}
 } 
 
-
-
 middlewareObj.checkCommentOwnership = function(req,res,next) {
 		if(req.isAuthenticated()){
 			Comment.findById(req.params.comment_id, function(err, foundComment){

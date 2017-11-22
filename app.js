@@ -20,7 +20,7 @@ var indexRoutes = require("./routes/index");
 var bidRoutes = require("./routes/bids")
 
 //APP CONFIG
-mongoose.connect("mongodb://localhost/ibid_v4fixed", {useMongoClient: true});
+mongoose.connect("mongodb://localhost/ibidv5", {useMongoClient: true});
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));

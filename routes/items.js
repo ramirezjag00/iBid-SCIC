@@ -20,11 +20,7 @@ router.post("/", middleware.isLoggedIn, function(req,res){
 	var name = req.body.name;
 	var price = req.body.price;
 	var bidPrice = req.body.bidPrice;
-	var highestBidder = {
-		id: req.user._id,
-		username: req.user.username,
-		name: req.user.name
-	};
+	var highestBidder = "";
 	var endDate = req.body.endDate;
 	var image = req.body.image;
 	var desc = req.body.description;
@@ -33,7 +29,7 @@ router.post("/", middleware.isLoggedIn, function(req,res){
 		username: req.user.username,
 		name: req.user.name
 	}
-	var newItem = {name: name, price:price, bidPrice:bidPrice, highestBidder:highestBidder, image: image, description:desc, author:author}
+	var newItem = {name: name, price:price, bidPrice:bidPrice, higestBidder : highestBidder, image: image, description:desc, author:author}
 	//create a new item and save to DB
 	Item.create(newItem, function(err, newlyCreated){
 		if(err){
@@ -71,8 +67,6 @@ router.get("/:id", function(req,res){
 		if(err){
 			console.log(err);
 		} else {
-			console.log(foundItem);
-			//render show template with that item
 			res.render("items/show", {item: foundItem});
 		}
 	})
@@ -102,8 +96,8 @@ router.get("/:id/edit", middleware.checkItemOwnership, function(req,res){
 
 //update bidPrice/highestBidder Route
 router.put("/:id", middleware.isLoggedIn, function(req,res){
-	Item.findByIdAndUpdate(req.params.id, {$inc:{ 'bidPrice': 50}}, function(err, updatedItem){
-		if(err){
+	Item.findByIdAndUpdate(req.params.id, {$set:{highestBidder: req.user.id}, $inc:{ bidPrice: 50}}, function(err, updatedItem){
+			if(err){
 			console.log(err);
 		} else {
 			res.redirect("/items/" + req.params.id);
@@ -111,20 +105,31 @@ router.put("/:id", middleware.isLoggedIn, function(req,res){
 	});
 });
 
+// router.put("/:id", middleware.isLoggedIn, function(req,res){
+// 	Item.findByIdAndUpdate(req.params.id, {$inc:{ bidPrice: 50}},
+// 		function(err, updatedItem){
+// 			if(err){
+// 			console.log(err);
+// 		} else {
+// 			res.redirect("/items/" + req.params.id);
+// 		}
+// 	});
+// });
+
 
 //UPDATE ROUTE
 
-router.put("/:id", middleware.checkItemOwnership, function(req,res){
-	//find and update the correct item
-	Item.findByIdAndUpdate(req.params.id, req.body.item, function(err, updatedItem){
-		if(err){
-			res.redirect("/items");
-		} else {
-			//redirect somewhere(show page)
-			res.redirect("/items/" + req.params.id);
-		}
-	})
-});
+// router.put("/:id", middleware.isLoggedIn, function(req,res){
+	
+// 	Item.findByIdAndUpdate(req.params.id, {$inc:{ 'bidPrice': 50}}, {$set: {'highestBidder.id' : currentUser._id}}, function(err, updatedItem){
+// 		if(err){
+// 			console.log(err);
+// 		} else {
+// 			console.log("test");
+// 			res.redirect("/items/" + req.params.id);
+// 		}
+// 	});
+// });
 
 //DESTROY ROUTE
 router.delete("/:id", middleware.checkItemOwnership, function(req,res){

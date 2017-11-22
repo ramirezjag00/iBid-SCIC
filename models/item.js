@@ -5,14 +5,7 @@ var itemSchema = new mongoose.Schema({
 	name:String,
 	price: Number,
 	bidPrice: Number,
-	highestBidder: {
-		id:{
-			type:mongoose.Schema.Types.ObjectId,
-			ref:"User"
-		},
-		username:Number,
-		name:String
-	},
+	highestBidder: String,
 	image:String,
 	description: String,
 	created:{type:Date, default: Date.now},
