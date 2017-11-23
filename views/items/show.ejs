@@ -37,7 +37,7 @@
             <%= item._id%>
           </li>
           <form action="/items/<%= item._id %>?_method=PUT" method="POST"> 
-          <li class="list-group-item">Current Bid: <%= item.bidPrice %> </li>      	  
+          <li class="list-group-item">Current Bid: Php <%= item.bidPrice %> </li>      	  
           <li class="list-group-item">Highest Bidder: <%= item.highestBidder %> </li>
           <% if(currentUser && (!currentUser._id.equals(item.highestBidder) && !currentUser._id.equals(item.author.id))) { %>
 
@@ -72,7 +72,7 @@
               <%= item.created.toDateString() %> to
                 <%= item.endDate.toDateString() %>
             </p>
-            <pre>Item Description:<br /><%= item.description %>
+            <pre>Item Description:<br /><%- item.description %>
             </pre>
             <p>
               <em>Posted by: <%= item.author.name %></em>
@@ -87,4 +87,7 @@
       </div>
     </div>
   </div>
+  <footer class="bgFooter">
+  iBid &copy; 2017
+</footer>
   <% include ../partials/footer %>

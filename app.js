@@ -10,6 +10,7 @@ var LocalStrategy = require("passport-local");
 var Item = require("./models/item");
 var User = require("./models/user");
 var methodOverride = require("method-override");
+var expressSanitizer = require("express-sanitizer");
 // var seedDB = require("./seeds");
 
 //requiring routes

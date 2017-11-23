@@ -39,13 +39,18 @@ img:hover {
 }
 
 .indexItem {
-  height: 15% !important;
+  height: 7%;
 }
 
 .bgFooter {
   padding-top: 10px;
   padding-bottom: 10px;
-  background: #e7e7e7;
+  left: 0;
+  bottom: 0;
+  max-width: 100%;
+  background-color: #303030;
+  color: #9d9d9d;
+  text-align: center;
 }
 
 #disclaimerCollapse li {
@@ -76,15 +81,21 @@ pre {
   border:none;
 }
 
-@media only screen and (max-width: 600px) {
-    .divFormWidthMargin {
+@media only screen and (min-width: 600px) {
+  .divFormWidthMargin {
   width: 47%;
+  }
+  .indexItem {
+  height: 10%;
   }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (min-width: 768px) {
   .divFormWidthMargin {
   width: 60%;
+  }
+  .indexItem {
+  height: 15%;
   }
 }
 
