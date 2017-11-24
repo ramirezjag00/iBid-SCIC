@@ -19,7 +19,7 @@ img:hover {
 }
 
 .divFormWidthMargin {
-  width: 30%;
+  width: 60%;
   margin: 25px auto;
 }
 
@@ -39,13 +39,18 @@ img:hover {
 }
 
 .indexItem {
-  height: 200px !important;
+  height: 7%;
 }
 
 .bgFooter {
   padding-top: 10px;
   padding-bottom: 10px;
-  background: #e7e7e7;
+  left: 0;
+  bottom: 0;
+  max-width: 100%;
+  background-color: #303030;
+  color: #9d9d9d;
+  text-align: center;
 }
 
 #disclaimerCollapse li {
@@ -63,4 +68,78 @@ img:hover {
 
 #edit {
   display: none;
+}
+
+textarea {
+   resize: none;
+}
+
+pre {
+  font: 1em Montserrat, sans-serif;
+  overflow:hidden; 
+  background-color:white; 
+  border:none;
+}
+
+
+.navbar-inverse{
+  background-color: #303030;
+}
+
+::selection {
+  background-color: #7dba03;
+}
+
+.col-md-3 a, .col-sm-6 a {
+  text-decoration: none;
+  color: #000000;
+}
+
+  .formSearch {
+    padding-top: 9px;
+  }
+
+ .inputSearch {
+  max-width: 69%;
+  display: inline !important;
+  }
+
+    .search {
+    max-width: auto;
+  }
+
+  div.searchFGroup {
+    padding-left: 7%;
+    width: 100%;
+  }
+
+@media only screen and (min-width: 600px) {
+  .divFormWidthMargin {
+  width: 47%;
+  }
+  .indexItem {
+  height: 10%;
+  }
+  .inputSearch {
+  max-width: 87%;
+  }
+  div.searchFGroup {
+    padding-left: 3%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .divFormWidthMargin {
+  width: 60%;
+  }
+  .indexItem {
+  height: 15%;
+  }
+  .inputSearch {
+  max-width: 194px;
+  display: inline !important;
+  }
+  div.searchFGroup {
+    padding-left: 6px;
+  }
 }
