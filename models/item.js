@@ -8,22 +8,17 @@ var itemSchema = new mongoose.Schema({
 	highestBidder: String,
 	image:String,
 	description: String,
-	created:{type:Date, default: Date.now},
-	endDate:{type:Date, default: +new Date() + 7*24*60*60*1000},
+	created:{type:Date, default: new Date()},
+	endDate:{type:Date, default: new Date(+new Date() + 7*24*60*60*1000).setHours(12,0,0,0)},
 	author: {
 		id:{
 			type:mongoose.Schema.Types.ObjectId,
 			ref:"User"
 		},
-		username:Number,
+		username:String,
 		name:String
-	},
-	comments:[
-	{
-		type: mongoose.Schema.Types.ObjectId,
-		ref:"Comment"
 	}
-	]
 });
 
 module.exports = mongoose.model("Item", itemSchema);
+

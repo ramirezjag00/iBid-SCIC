@@ -3,7 +3,7 @@
 <head>
 	<title>iBid</title>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
@@ -11,20 +11,8 @@
 	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<script>
-$(document).ready(function(){
-    $("#show").click(function(){
-        $("#edit, #submit, #cancel").show();
-         $("#editContent, #show, #del").hide();
-    });
-    $("#cancel").click(function(){
-    $("#edit, #submit, #cancel").hide();
-    $("#editContent, #show, #del").show();
-    });
-});
-</script>
 
-	<nav class="navbar navbar-default">
+	<nav class="navbar navbar-inverse">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -32,19 +20,39 @@ $(document).ready(function(){
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                     
       </button>
-			<a class="navbar-brand" href="/">iBid <span class="labelMini">Powered by: SCIC - MIS</span></a>
+			<a class="navbar-brand" href="/items">iBid <span class="labelMini">Powered by: SCIC - MIS</span></a>
+
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav navbar-right">
+				<% if(currentUser){ %>
+				<li><form class="form-inline formSearch" action="/items" method="GET">
+                    <div class="form-group searchFGroup">
+                        <input class="form-control inputSearch" type="text" name="search" placeholder="Item search...">
+                        <input class="btn btn-success search" type="submit" value="Search">
+                    </div>
+
+                </form></li>
+                <% } %>
 				<% if(!currentUser){ %>
 				<li><a href="/login">Log In</a></li>
 				<li><a href="/register">Sign Up</a></li>
 				<% } else { %>
+
 				<li><a href="#"><%= currentUser.name %> <%= currentUser.lname %></a></li>
-				<li><a href="#">MyBids</a></li>
+				<li><a href="#">Account ID: <%= currentUser._id %></a></li>
 				<li><a href="/logout">Log Out</a></li>
 				<% } %>
 			</ul>
 		</div>
 	</div>
 </nav>
+<div class="container">
+	<% if (error && error.length > 0){%>
+		<div class="alert alert-danger text-center" role="alert"><%= error %>
+		</div> 
+	<% } %>
+	<% if (success && success.length > 0){%>
+		<div class="alert alert-success text-center" role="alert"><%= success %></div>
+	<% } %>
+</div>

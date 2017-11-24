@@ -5,14 +5,29 @@ var middleware = require("../middleware");
 
 //INDEX ROUTE
 router.get("/", function(req,res){
-	//get all items from DB
-	Item.find({}, function(err, allItems){
-		if(err){
-			console.log(err);
-		} else {
-			res.render("items/index", {items: allItems});
-		}
-	});
+    var noMatch = null;
+    if(req.query.search){
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        Item.find({name: regex}, function(err, allItems){
+            if(err){
+                console.log(err);
+            } else {
+                if(allItems.length === 0){
+                    noMatch = "'"+req.query.search+"'"+ " did not match items";
+                }
+                // eval(require("locus"))
+                res.render("items/index", {items:allItems, page:"items", noMatch:noMatch});
+            }         
+        });
+    } else {
+        Item.find({}, function(err, allItems){
+            if(err){
+                console.log(err);
+            } else {
+                res.render("items/index", {items:allItems, page:"items", noMatch:noMatch});
+            }
+        });
+    }
 });
 
 //CREATE ROUTE
@@ -29,7 +44,7 @@ router.post("/", middleware.isLoggedIn, function(req,res){
 		username: req.user.username,
 		name: req.user.name
 	}
-	var newItem = {name: name, price:price, bidPrice:bidPrice, higestBidder : highestBidder, image: image, description:desc, author:author}
+	var newItem = {name: name, price:price, bidPrice:bidPrice, highestBidder : highestBidder, image: image, description:desc, author:author}
 	//create a new item and save to DB
 	Item.create(newItem, function(err, newlyCreated){
 		if(err){
@@ -46,91 +61,47 @@ router.get("/new", middleware.isLoggedIn, function(req,res){
 	res.render("items/new");
 });
 
-// //SHOW ROUTE
-// router.get("/:id", function(req,res){
-// 	//find the item with the provided ID
-// 	Item.findById(req.params.id).populate("item.bidPrice").exec(function(err, foundItem){
-// 		if(err){
-// 			console.log(err);
-// 		} else {
-// 			console.log(foundItem);
-// 			//render show template with that item
-// 			res.render("items/show", {item: foundItem});
-// 		}
-// 	})
-// });
-
-//SHOW ROUTE
+//SHOW - RESTFUL ROUTE
 router.get("/:id", function(req,res){
-	//find the item with the provided ID
-	Item.findById(req.params.id).populate("comments").exec(function(err, foundItem){
+	//find the Item with the provided ID
+	Item.findById(req.params.id, function(err,foundItem){
 		if(err){
-			console.log(err);
+			res.redirect("items/index");
 		} else {
+			//render show template with that item
 			res.render("items/show", {item: foundItem});
 		}
-	})
-});
-
-//EDIT ROUTE
-
-router.get("/:id/edit", middleware.checkItemOwnership, function(req,res){
-	Item.findById(req.params.id, function(err, foundItem){
-		res.render("items/edit", {item: foundItem});	
 	});
 });
 
-//UPDATE bid ROUTE
-
-// router.put("/:id", middleware.isLoggedIn, function(req,res){
-// 	//find one and update the correct item
-// 	Item.update({_id: req.user._id}, {$inc: {bidPrice:50}}, function(err, updatedItem){
-// 		if(err){
-// 			res.redirect("/items");
-// 		} else {
-// 			//redirect somewhere(show page)
-// 			res.redirect("/items/" + req.params.id);
-// 		}
-// 	});
-// });
 
 //update bidPrice/highestBidder Route
 router.put("/:id", middleware.isLoggedIn, function(req,res){
-	Item.findByIdAndUpdate(req.params.id, {$set:{highestBidder: req.user.id}},{$inc:{ bidPrice: 50}},
-		function(err, updatedItem){
+	Item.findByIdAndUpdate(req.params.id, {$set:{highestBidder: req.user.id}, $inc:{ bidPrice: 50}}, function(err, updatedItem){
 			if(err){
 			console.log(err);
 		} else {
+			req.flash("success", "Your bid has been successful! Make sure to keep track of this item. Keep on bidding!");
 			res.redirect("/items/" + req.params.id);
 		}
 	});
 });
 
-
-//UPDATE ROUTE
-
-// router.put("/:id", middleware.isLoggedIn, function(req,res){
-	
-// 	Item.findByIdAndUpdate(req.params.id, {$inc:{ 'bidPrice': 50}}, {$set: {'highestBidder.id' : currentUser._id}}, function(err, updatedItem){
-// 		if(err){
-// 			console.log(err);
-// 		} else {
-// 			console.log("test");
-// 			res.redirect("/items/" + req.params.id);
-// 		}
-// 	});
-// });
-
 //DESTROY ROUTE
-router.delete("/:id", middleware.checkItemOwnership, function(req,res){
+router.delete("/:id", middleware.isLoggedIn, function(req,res){
 	Item.findByIdAndRemove(req.params.id, function(err){
 		if(err){
 			res.redirect("/items");
 		} else {
+			req.flash("success", "Item deleted!");
 			res.redirect("/items");
 		}
 	});
 });
 
+//def for search
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = router;
